@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>我的网页</title>
+    <style>
+        *{
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body{
+            background: #f5f7fa;
+            font-family: "微软雅黑",sans-serif;
+            text-align: center;
+            padding-top: 100px;
+        }
+        .box{
+            width: 500px;
+            margin: 0 auto;
+            background: #fff;
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 2px 15px #ddd;
+        }
+        h1{
+            color: #222;
+            margin-bottom: 20px;
+        }
+        p{
+            color: #666;
+            font-size: 16px;
+            line-height: 1.8;
+        }
+        button{
+            margin-top: 25px;
+            padding: 10px 26px;
+            border: none;
+            background: #0969da;
+            color: white;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 15px;
+        }
+        button:hover{
+            background: #0758b9;
+        }
+    </style>
+</head>
+
+</html>
