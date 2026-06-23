@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>武器库</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "Microsoft Yahei", sans-serif;
+        }
+        body {
+            background: #121418;
+            color: #e0e0e0;
+            padding: 30px;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        h1 {
+            text-align: center;
+            color: #ffc107;
+            letter-spacing: 4px;
+            margin-bottom: 30px;
+            border-bottom: 2px solid #ffc107;
+            padding-bottom: 12px;
+        }
+        .wrap {
+            display: flex;
+            gap: 25px;
+        }
+        /* 武器列表 */
+        .weapon-list {
+            width: 65%;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 16px;
+        }
+        .weapon-item {
+            background: #1e2229;
+            border: 1px solid #333842;
+            padding: 15px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: 0.25s;
+        }
+        .weapon-item:hover {
+            border-color: #ffc107;
+            transform: translateY(-3px);
+        }
+        .weapon-item.active {
+            border: 2px solid #ffc107;
+            box-shadow: 0 0 12px rgba(255,193,7,0.3);
+        }
+        .weapon-name {
+            font-size: 18px;
+            color: #fff;
+            margin: 8px 0 4px;
+        }
+        .weapon-type {
+            font-size: 13px;
+            color: #888;
+        }
+        /* 右侧详情面板 */
+        .weapon-info {
+            width: 35%;
+            background: #1e2229;
+            border: 1px solid #333842;
+            border-radius: 8px;
+            padding: 22px;
+        }
+        .info-title {
+            font-size: 22px;
+            color: #ffc107;
+            margin-bottom: 18px;
+        }
+        .stat-line {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 0;
+            border-bottom: 1px solid #2c3038;
+        }
+        .stat-name {
+            color: #aaa;
+        }
+        .stat-val {
+            color: #fff;
+        }
+        .desc {
+            margin-top: 20px;
+            line-height: 1.7;
+            color: #b0b0b0;
+        }
+        .equip-btn {
+            width: 100%;
+            margin-top: 25px;
+            padding: 12px;
+            background: #ffc107;
+            border: none;
+            color: #111;
+            font-weight: bold;
+            font-size: 16px;
+            border-radius: 6px;
+            cursor: pointer;
+        }
+        .equip-btn:hover {
+            background: #ffd042;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>军械武器库</h1>
+        <div class="wrap">
+            <!-- 武器网格列表 -->
+            <div class="weapon-list" id="listBox"></div>
+            <!-- 武器详情面板 -->
+            <div class="weapon-info" id="infoPanel">
+                <div class="info-title">请选择武器</div>
+                <p class="desc">点击左侧武器查看属性、描述并装备</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 武器数据
+        const weaponData = [
+            {
+                id: 1,
+                name: "AKM突击步枪",
+                type: "突击步枪",
+                damage: "48",
+                stability: "52",
+                range: "60",
+                magazine: "30发",
+                desc: "高伤害中距离步枪，后坐力较大，适合平原作战，适配多种配件。"
+            },
+            {
+                id: 2,
+                name: "M416自动步枪",
+                type: "突击步枪",
+                damage: "41",
+                stability: "78",
+                range: "55",
+                magazine: "30发",
+                desc: "满配件后稳定性极强，综合性能均衡，新手首选步枪。"
+            },
+            {
+                id: 3,
+                name: "AWM狙击枪",
+                type: "栓动狙击",
+                damage: "132",
+                stability: "85",
+                range: "100",
+                magazine: "5发",
+                desc: "空投专属狙击枪，一击击穿三级头，仅使用马格南子弹。"
+            },
+            {
+                id: 4,
+                name: "S686霰弹枪",
+                type: "双管霰弹",
+                damage: "24*2",
+                stability: "30",
+                range: "15",
+                magazine: "2发",
+                desc: "近距离爆发天花板，两发可击倒全等级防具敌人。"
+            },
+            {
+                id: 5,
+                name: "UZI冲锋枪",
+                type: "微型冲锋枪",
+                damage: "23",
+                stability: "82",
+                range: "25",
+                magazine: "35发",
+                desc: "射速极快，腰射精准，室内近距离拉扯强力武器。"
+            },
+            {
+                id: 6,
+                name: "98K狙击步枪",
+                type: "栓动狙击",
+                damage: "79",
+                stability: "70",
+                range: "90",
+                magazine: "5发",
+                desc: "地图可拾取狙击枪，能一击击倒二级头盔目标。"
+            }
+        ];
+
+        const listBox = document.getElementById("listBox");
+        const infoPanel = document.getElementById("infoPanel");
+
+        // 渲染武器列表
+        function renderList() {
+            weaponData.forEach(weapon => {
+                let div = document.createElement("div");
+                div.className = "weapon-item";
+                div.dataset.id = weapon.id;
+                div.innerHTML = `
+                    <h3 class="weapon-name">${weapon.name}</h3>
+                    <div class="weapon-type">${weapon.type}</div>
+                `;
+                div.onclick = () => showDetail(weapon, div);
+                listBox.appendChild(div);
+            })
+        }
+
+        // 展示武器详情
+        function showDetail(wp, dom) {
+            // 清除选中样式
+            document.querySelectorAll(".weapon-item").forEach(item => {
+                item.classList.remove("active");
+            })
+            dom.classList.add("active");
+            // 填充详情面板
+            infoPanel.innerHTML = `
+                <div class="info-title">${wp.name}</div>
+                <div class="stat-line">
+                    <span class="stat-name">武器类型</span>
+                    <span class="stat-val">${wp.type}</span>
+                </div>
+                <div class="stat-line">
+                    <span class="stat-name">单发伤害</span>
+                    <span class="stat-val">${wp.damage}</span>
+                </div>
+                <div class="stat-line">
+                    <span class="stat-name">稳定性</span>
+                    <span class="stat-val">${wp.stability}</span>
+                </div>
+                <div class="stat-line">
+                    <span class="stat-name">有效射程</span>
+                    <span class="stat-val">${wp.range}</span>
+                </div>
+                <div class="stat-line">
+                    <span class="stat-name">弹夹容量</span>
+                    <span class="stat-val">${wp.magazine}</span>
+                </div>
+                <p class="desc">${wp.desc}</p>
+                <button class="equip-btn">装备当前武器</button>
+            `
+        }
+        renderList();
+    </script>
+</body>
+</html>
